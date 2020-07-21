@@ -85,12 +85,14 @@ def china_provincedata():  # 默认返回内容
 
     str1 = 'SELECT confirmedCount, confirmedIncr, dateId FROM summer.china_provincedata where provinceShortName=' + (
         '\'') + prem + ('\';')
-    print(str1)
     db = SQLManager()
-    temp = db.get_list(str1)
+    re = db.get_list(str1)
+    temp = {'confirmeCount': [i['confirmedCount'] for i in re], 'confirmedIncr': [i['confirmedIncr'] for i in re],
+            'dateId': [str(i['dateId'])[4:] for i in re]}
     print(temp)
     db.close()
-    return json.dumps(temp, ensure_ascii=False)
+    result = json.dumps(temp, ensure_ascii=False)
+    return result
 
 
 if __name__ == '__main__':
