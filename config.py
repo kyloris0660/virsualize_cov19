@@ -1,5 +1,5 @@
 import pymysql
-from db_config import *
+from db_config import DB_CONFIG
 
 
 class SQLManager(object):
@@ -60,10 +60,6 @@ class SQLManager(object):
         self.cursor.close()
         self.conn.close()
 
-    # 最后，我们每次操作完数据库之后都要手动关闭，可不可以写成自动关闭的呢？
-    # 联想到我们之前学过的文件操作，使用with语句可以实现缩进结束自动关闭文件句柄的例子。
-    # 我们来把我们的数据库连接类SQLManager类再优化下，使其支持with语句操作。
-    # 进入with语句自动执行
     def __enter__(self):
         return self
 
