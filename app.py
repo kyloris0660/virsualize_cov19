@@ -89,10 +89,45 @@ def great_elephant():  # 默认返回内容
     # prem = "'上海'"
     population = 'select province_population from summer.population where province_name=' + ('\'') + area + ('\';')
     count = 'SELECT confirmedCount FROM summer.china_provincedata where dateId=20200124 and provinceShortName=' + (
-        '\'') + area + ('\';')
+        '\'') + area + '\';'
     db = SQLManager()
     population = int((db.get_list(population))[0]['province_population'])
     count = int(db.get_list(count)[0]['confirmedCount'])
+    # print(population)
+    # print(count)
+    db.close()
+    data = draw_little_elephant(r1, r2, int(population))
+    # print(data)
+    date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
+
+    return json.dumps({'small_elephant': data[16:], 'big_elephant': date_data[16:]}, ensure_ascii=False)
+
+
+@app.route("/predict_2", methods=["POST", "GET"])
+def giant_elephant():  # 默认返回内容
+    return_dict = {'return_code': 200, 'return_info': '处理成功', 'result': False}
+
+    # 判断传入的json数据是否为空
+    if request.get_data() is None:
+        return_dict['return_code'] = '5004'
+        return_dict['return_info'] = '请求参数为空'
+        return json.dumps(return_dict, ensure_ascii=False)
+
+    # 获取传入的参数
+    get_Data = request.get_data()
+    get_Data = json.loads(get_Data)
+    area = get_Data.get('area')
+    # prem = "'上海'"
+    population = 'select province_population from summer.population where province_name=' + ('\'') + area + ('\';')
+    # count = 'SELECT confirmedCount FROM summer.china_provincedata where dateId=20200124 and provinceShortName=' + (
+    #     '\'') + area + ('\';')
+    db = SQLManager()
+    population = int((db.get_list(population))[0]['province_population'])
+    # count = int(db.get_list(count)[0]['confirmedCount'])
+    r1 = 'SELECT r1 FROM summer.rate where province_name=' + '\'' + area + '\';'
+    r2 = 'SELECT r2 FROM summer.rate where province_name=' + '\'' + area + '\';'
+    r1 = int(db.get_list(r1)[0]['r1'])
+    r2 = int(db.get_list(r2)[0]['r2'])
     # print(population)
     # print(count)
     db.close()
@@ -150,7 +185,7 @@ def china_provincedata():  # 默认返回内容
     prem = get_Data.get('key')
 
     str1 = 'SELECT confirmedCount, confirmedIncr, dateId FROM summer.china_provincedata where provinceShortName=' + (
-        '\'') + prem + ('\';')
+        '\'') + prem + '\' order by dateId;'
     db = SQLManager()
     re = db.get_list(str1)
     temp = {'confirmeCount': [i['confirmedCount'] for i in re], 'confirmedIncr': [i['confirmedIncr'] for i in re],
