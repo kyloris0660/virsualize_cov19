@@ -97,7 +97,6 @@ def great_elephant():  # 默认返回内容
     # print(count)
     db.close()
     data = draw_little_elephant(r1, r2, int(population))
-    # print(data)
     date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
 
     return json.dumps({'small_elephant': data[16:], 'big_elephant': date_data[16:]}, ensure_ascii=False)
@@ -126,16 +125,23 @@ def giant_elephant():  # 默认返回内容
     # count = int(db.get_list(count)[0]['confirmedCount'])
     r1 = 'SELECT r1 FROM summer.rate where province_name=' + '\'' + area + '\';'
     r2 = 'SELECT r2 FROM summer.rate where province_name=' + '\'' + area + '\';'
-    r1 = int(db.get_list(r1)[0]['r1'])
-    r2 = int(db.get_list(r2)[0]['r2'])
+    r1 = float(db.get_list(r1)[0]['r1'])
+    r2 = float(db.get_list(r2)[0]['r2'])
+    # print(r1, r2)
     # print(population)
     # print(count)
     db.close()
     data = draw_little_elephant(r1, r2, int(population))
-    # print(data)
+    increase_data = [0]
+    for i in range(1, len(data)):
+        increase_data.append(data[i] - data[i - 1])
+    # print(len(increase_data))
+
     date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
 
-    return json.dumps({'small_elephant': data[16:], 'big_elephant': date_data[16:]}, ensure_ascii=False)
+    return json.dumps(
+        {'small_elephant': data[16:], 'big_elephant': date_data[16:], 'increase_elephant': increase_data[16:]},
+        ensure_ascii=False)
 
 
 @app.route("/predict", methods=["POST", "GET"])
@@ -197,3 +203,4 @@ def china_provincedata():  # 默认返回内容
 
 if __name__ == '__main__':
     app.run(host='192.168.31.124', port=5000, debug=False)
+    # app.run(host='192.168.31.245', port=8000, debug=False)
