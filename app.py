@@ -3,7 +3,7 @@ from config import *
 from flask_cors import CORS
 import json
 import pandas
-from SERI import draw_little_elephant
+from SERI import draw_little_elephant, draw_elephant
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -98,9 +98,40 @@ def great_elephant():  # 默认返回内容
     db.close()
     data = draw_little_elephant(r1, r2, int(population))
     # print(data)
-    date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200723')]
+    date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
 
     return json.dumps({'small_elephant': data[16:], 'big_elephant': date_data[16:]}, ensure_ascii=False)
+
+
+@app.route("/predict", methods=["POST", "GET"])
+def elephant_king():  # 默认返回内容
+    return_dict = {'return_code': 200, 'return_info': '处理成功', 'result': False}
+
+    # 判断传入的json数据是否为空
+    if request.get_data() is None:
+        return_dict['return_code'] = '5004'
+        return_dict['return_info'] = '请求参数为空'
+        return json.dumps(return_dict, ensure_ascii=False)
+
+    # 获取传入的参数
+    get_Data = request.get_data()
+    get_Data = json.loads(get_Data)
+    area = get_Data.get('area')
+    regulation_vaccine = get_Data.get('data')
+    # prem = "'上海'"
+    population = 'select province_population from summer.population where province_name=' + '\'' + area + '\';'
+    r0 = 'SELECT r1 FROM summer.rate where province_name=' + '\'' + area + '\';'
+    db = SQLManager()
+    population = int((db.get_list(population))[0]['province_population'])
+    count = int(db.get_list(count)[0]['confirmedCount'])
+    # print(population)
+    # print(count)
+    db.close()
+    data = draw_elephant(regulation_vaccine=regulation_vaccine, population=population, r0=r0)
+    print(data)
+    date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
+
+    return json.dumps({'predict_data': data[16:], 'time': date_data[16:]}, ensure_ascii=False)
 
 
 @app.route("/infection", methods=["POST", "GET"])
@@ -124,7 +155,6 @@ def china_provincedata():  # 默认返回内容
     re = db.get_list(str1)
     temp = {'confirmeCount': [i['confirmedCount'] for i in re], 'confirmedIncr': [i['confirmedIncr'] for i in re],
             'dateId': [str(i['dateId'])[4:] for i in re]}
-    # print(temp)
     db.close()
     result = json.dumps(temp, ensure_ascii=False)
     return result
