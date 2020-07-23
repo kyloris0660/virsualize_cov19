@@ -1,5 +1,16 @@
 import pymysql
-from db_config import DB_CONFIG
+try:
+    import db_config
+    BD_CONFIG = db_config.DB_CONFIG
+except ImportError:
+    DB_CONFIG = {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "user": "root",
+        "passwd": "",
+        "db": "summer",
+        "charset": "utf8"
+    }
 
 
 class SQLManager(object):
@@ -13,12 +24,12 @@ class SQLManager(object):
     # 连接数据库
     def connect(self):
         self.conn = pymysql.connect(
-            host=DB_CONFIG["host"],
-            port=DB_CONFIG["port"],
-            user=DB_CONFIG["user"],
-            passwd=DB_CONFIG["passwd"],
-            db=DB_CONFIG["db"],
-            charset=DB_CONFIG["charset"]
+            host=db_config.DB_CONFIG["host"],
+            port=db_config.DB_CONFIG["port"],
+            user=db_config.DB_CONFIG["user"],
+            passwd=db_config.DB_CONFIG["passwd"],
+            db=db_config.DB_CONFIG["db"],
+            charset=db_config.DB_CONFIG["charset"]
         )
         self.cursor = self.conn.cursor(cursor=pymysql.cursors.DictCursor)
 

@@ -62,7 +62,6 @@ def city_info():  # 默认返回内容
     prem = get_Data.get('key')
     # prem = "'上海'"
     str1 = 'select * from summer.population where province_name=' + ('\'') + prem + ('\';')
-    # print(str1)
     db = SQLManager()
     temp = db.get_list(str1)
     # print(temp)
@@ -92,9 +91,6 @@ def great_elephant():  # 默认返回内容
         '\'') + area + '\';'
     db = SQLManager()
     population = int((db.get_list(population))[0]['province_population'])
-    count = int(db.get_list(count)[0]['confirmedCount'])
-    # print(population)
-    # print(count)
     db.close()
     data = draw_little_elephant(r1, r2, int(population))
     date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
@@ -176,11 +172,10 @@ def elephant_king():  # 默认返回内容
     # print(len(date_data))
     return json.dumps({'predict_data': data[16:], 'time': date_data[16:], 'increase_data': increase_data[16:]},
                       ensure_ascii=False)
-    # return json.dumps(return_dict, ensure_ascii=False)
 
 
 @app.route("/infection", methods=["POST", "GET"])
-def china_provincedata():  # 默认返回内容
+def china_province_data():  # 默认返回内容
     return_dict = {'return_code': 200, 'return_info': '处理成功', 'result': False}
 
     # 判断传入的json数据是否为空
@@ -207,4 +202,3 @@ def china_provincedata():  # 默认返回内容
 
 if __name__ == '__main__':
     app.run(host='192.168.31.124', port=5000, debug=False)
-    # app.run(host='192.168.31.245', port=8000, debug=False)
