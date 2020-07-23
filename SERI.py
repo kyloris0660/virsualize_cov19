@@ -1,8 +1,14 @@
 import numpy as np
 from scipy.integrate import odeint
+import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 from sbsk import *
+
+
+def dict2list(dist):
+    df = pd.DataFrame(dist).fillna('null')
+    return df.values.tolist()
 
 
 def SEIR(inivalue, _, beta1, beta2, gamma, sigma, r, N):
@@ -112,11 +118,11 @@ def draw_elephant(regulation_vaccine, population, r0):
             int(i[1].split('-')[1]),
             int(i[1].split('-')[2]))
         delta_time = abs(delta_time.days)
-        r = r0 * i[2]
-        N = N - i[3]
+        r = r0 * float(i[2])
+        N = N - float(i[3])
 
         S_[cnt + 1], E_[cnt + 1], I_[cnt + 1], R_[cnt + 1] = process(delta_time, r=r, E=E_[cnt][-1], I=I_[cnt][-1],
-                                                                     R=R_[cnt][-1], sigma=1 / 4)
+                                                                     R=R_[cnt][-1], sigma=1 / 4, N=N)
         cnt = cnt + 1
 
     result = []

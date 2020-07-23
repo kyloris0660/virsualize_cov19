@@ -3,7 +3,7 @@ from config import *
 from flask_cors import CORS
 import json
 import pandas
-from SERI import draw_little_elephant, draw_elephant
+from SERI import draw_little_elephant, draw_elephant, dict2list
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -159,19 +159,23 @@ def elephant_king():  # 默认返回内容
     get_Data = json.loads(get_Data)
     area = get_Data.get('area')
     regulation_vaccine = get_Data.get('data')
-    print(regulation_vaccine)
+    regulation_vaccine = dict2list(regulation_vaccine)
     population = 'select province_population from summer.population where province_name=' + '\'' + area + '\';'
     r0 = 'SELECT r1 FROM summer.rate where province_name=' + '\'' + area + '\';'
     db = SQLManager()
-    population = int((db.get_list(population))[0]['province_population'])
-    r0 = int(db.get_list(r0)[0]['r1'])
+    population = float((db.get_list(population))[0]['province_population'])
+    r0 = float(db.get_list(r0)[0]['r1'])
     # print(r0)
     db.close()
     data = draw_elephant(regulation_vaccine=regulation_vaccine, population=population, r0=r0)
+    increase_data = [0]
+    for i in range(1, len(data)):
+        increase_data.append(data[i] - data[i - 1])
     # print(len(data))
     date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
     # print(len(date_data))
-    return json.dumps({'predict_data': data[16:], 'time': date_data[16:]}, ensure_ascii=False)
+    return json.dumps({'predict_data': data[16:], 'time': date_data[16:], 'increase_data': increase_data[16:]},
+                      ensure_ascii=False)
     # return json.dumps(return_dict, ensure_ascii=False)
 
 
