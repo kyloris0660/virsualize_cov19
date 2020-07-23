@@ -118,20 +118,20 @@ def elephant_king():  # 默认返回内容
     get_Data = json.loads(get_Data)
     area = get_Data.get('area')
     regulation_vaccine = get_Data.get('data')
-    # prem = "'上海'"
+    print(regulation_vaccine)
     population = 'select province_population from summer.population where province_name=' + '\'' + area + '\';'
     r0 = 'SELECT r1 FROM summer.rate where province_name=' + '\'' + area + '\';'
     db = SQLManager()
     population = int((db.get_list(population))[0]['province_population'])
-    count = int(db.get_list(count)[0]['confirmedCount'])
-    # print(population)
-    # print(count)
+    r0 = int(db.get_list(r0)[0]['r1'])
+    # print(r0)
     db.close()
     data = draw_elephant(regulation_vaccine=regulation_vaccine, population=population, r0=r0)
-    print(data)
+    # print(len(data))
     date_data = [d.strftime('%Y%m%d') for d in pandas.date_range('20200105', '20200711')]
-
+    # print(len(date_data))
     return json.dumps({'predict_data': data[16:], 'time': date_data[16:]}, ensure_ascii=False)
+    # return json.dumps(return_dict, ensure_ascii=False)
 
 
 @app.route("/infection", methods=["POST", "GET"])

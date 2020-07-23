@@ -103,7 +103,6 @@ def draw_elephant(regulation_vaccine, population, r0):
     S_[0], E_[0], I_[0], R_[0] = process(t0, r=r0, E=0, I=1, R=0, sigma=1 / 14, N=population)
     # num_regulation = len(regulation)
     # date_list = []
-    r = r0
     N = population
     cnt = 0
     for i in regulation_vaccine:
@@ -123,14 +122,18 @@ def draw_elephant(regulation_vaccine, population, r0):
     result = []
     for i in range(len(S_)):
         result.append(I_[i] + R_[i])
+    # for i in result:
+    #     print(i.shape[0])
     result_seq = []
+
     for i in range(len(result)):
         if i == 0:
             result_seq += [k for k in result[i]]
         else:
-            result_seq += [k for k in result[i]][1::]
+            result_seq += [k for k in result[i][1:]]
 
     assert len(result_seq) == 189
+    # print(len(result_seq))
     return result_seq
 
 
@@ -165,11 +168,17 @@ if __name__ == '__main__':
     #
     # plt.legend()
     # plt.show()
-    print(draw_little_elephant(18, 2, 1400000000, 1))
+    # print(draw_little_elephant(18, 2, 1400000000, 1))
     # print(draw_mid_elephant(18, 9, 2, 1400000000))
-    # print((draw_elephant([['2020-01-28', '2020-02-07', 9 / 18, 0], ['2020-02-08', '2020-07-11', 2 / 18, 0],
-    #                       ], 1400000000,
-    #                      18)))
-    print((draw_elephant([['2020-01-05', '2020-07-11', 2 / 18, 0],
+    print((draw_elephant([['2020-02-5', '2020-02-07', 1, 0], ['2020-02-07', '2020-07-11', 2 / 18, 200000],
                           ], 1400000000,
+                         18)))
+    print((draw_elephant([['2020-02-02', '2020-07-11', 2 / 50, 0]], 1400000000,
+                         50)))
+    print((draw_elephant([['2020-01-15', '2020-01-17', 1, 0], ['2020-01-17', '2020-02-11', 2 / 18, 0],
+                          ['2020-02-11', '2020-07-11', 2 / 18, 0]], 1400000000,
+                         18)))
+    # 6 30 150
+    print((draw_elephant([['2020-01-28', '2020-02-07', 0.5, 0], ['2020-02-08', '2020-02-11', 0.1111111111111111, 0],
+                          ['2020-02-12', '2020-07-11', 0.1111111111111111, 0]], 1400000000,
                          18)))
