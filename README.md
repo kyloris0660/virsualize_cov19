@@ -2,7 +2,9 @@
 
 上海大学2020年暑期认识实习大作业，实现了简单的疫情可视化网站。
 
-前端：Vue
+前端代码仓库：https://github.com/Armo00/demo3
+
+前端：Vue 
 
 后端：flask+mysql
 
