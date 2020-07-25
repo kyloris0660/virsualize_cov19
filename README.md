@@ -26,7 +26,7 @@ python3 app.py
 cd ./virus/demo3/vue test/vue_test
 npm install
 npm run serve
-npm run build
+# npm run build
 ```
 
 数据库文件
