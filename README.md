@@ -41,5 +41,11 @@ npm run build
 
 ## 截图
 
-TODO
+![https://github.com/kyloris0660/virsualize_cov19/blob/master/screenshots/000.png]()
+
+![https://github.com/kyloris0660/virsualize_cov19/blob/master/screenshots/001.png]()
+
+![https://github.com/kyloris0660/virsualize_cov19/blob/master/screenshots/002.png]()
+
+![https://github.com/kyloris0660/virsualize_cov19/blob/master/screenshots/003.png]()
 
